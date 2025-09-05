@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Bank Platform</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    }
+    .animate-fade-in {
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .hero-bg {
+      background-image: url('https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/b5d82932-806b-428e-9aea-fa96c5d4160c.png');
+      background-size: cover;
+      background-position: center;
+    }
+    #eligibility-result,
+    #matches-result {
+      font-weight: bold;
+      color: #b91c1c; /* Tailwind red-700 */
+    }
+  </style>
+</head>
+<body class="text-gray-800">
+
+  <!-- Header with Navigation -->
+  <header class="bg-red-600 text-white shadow-md">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <div class="text-2xl font-bold">BloodLink</div>
+      <nav>
+        <ul class="flex flex-wrap space-x-4 md:space-x-6">
+          <li><a href="#home" class="hover:text-red-200">Home</a></li>
+          <li><a href="#donor-registration" class="hover:text-red-200">Register</a></li>
+          <li><a href="#eligibility" class="hover:text-red-200">Eligibility</a></li>
+          <li><a href="#centers" class="hover:text-red-200">Centers</a></li>
+          <li><a href="#tracker" class="hover:text-red-200">Tracker</a></li>
+          <li><a href="#sos" class="hover:text-red-200">SOS</a></li>
+          <li><a href="#matching" class="hover:text-red-200">Matching</a></li>
+          <li><a href="#certificate" class="hover:text-red-200">Certificate</a></li>
+          <li><a href="#organ" class="hover:text-red-200">Organ</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section id="home" class="hero-bg text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h1 class="text-5xl font-bold mb-4 animate-fade-in">Save Lives with BloodLink</h1>
+      <p class="text-xl mb-8">A Reliable Platform for Blood and Organ Donation</p>
+      <img src="https://storage.googleapis.com/workspace-0f70711f-8b4e-4d94-86f1-2a93ccde5887/image/693b53f2-4aa7-46a6-a87b-6898ebc784a9.png" alt="Blood donation illustration" class="mx-auto rounded-lg shadow-lg">
+      <p class="mt-4 italic">Illustration: Diverse donors in a welcoming hospital environment</p>
+    </div>
+  </section>
+
+  <!-- Real Time Donors -->
+  <section class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Real-Time Donors</h2>
+      <div id="real-time-donors" class="grid grid-cols-1 md:grid-cols-3 gap-8"></div>
+    </div>
+  </section>
+
+  <!-- Donor Registration -->
+  <section id="donor-registration" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Register as a Donor</h2>
+      <form id="donor-form" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+        <label class="block mb-2">Name</label>
+        <input type="text" id="donor-name" class="w-full p-2 border mb-4" required>
+        <label class="block mb-2">Blood Type</label>
+        <select id="blood-type" class="w-full p-2 border mb-4">
+          <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+        </select>
+        <label class="block mb-2">Contact</label>
+        <input type="tel" id="donor-contact" class="w-full p-2 border mb-4" required>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full">Register</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Eligibility -->
+  <section id="eligibility" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Check Donor Eligibility</h2>
+      <form id="eligibility-form" class="max-w-md mx-auto bg-gray-100 p-8 rounded-lg shadow-md">
+        <label class="block mb-2">Age</label>
+        <input type="number" id="age" class="w-full p-2 border mb-4" min="18" max="65">
+        <label class="block mb-2">Weight (kg)</label>
+        <input type="number" id="weight" class="w-full p-2 border mb-4" min="50">
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full">Check</button>
+        <p id="eligibility-result" class="mt-4 text-center"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Centers -->
+  <section id="centers" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Find Nearby Centers</h2>
+      <div class="text-center">
+        <input type="text" id="location" placeholder="Enter your location" class="p-2 border mb-4">
+        <button onclick="findCenters()" class="bg-red-600 text-white px-4 py-2 rounded">Search</button>
+      </div>
+      <div id="centers-list" class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+    </div>
+  </section>
+
+  <!-- Tracker -->
+  <section id="tracker" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Blood Availability Tracker</h2>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="bg-red-100 p-4 rounded text-center"><strong>O+</strong> <p id="o-pos">10 units</p></div>
+        <div class="bg-blue-100 p-4 rounded text-center"><strong>A+</strong> <p id="a-pos">8 units</p></div>
+        <div class="bg-green-100 p-4 rounded text-center"><strong>B+</strong> <p id="b-pos">5 units</p></div>
+        <div class="bg-yellow-100 p-4 rounded text-center"><strong>AB+</strong> <p id="ab-pos">3 units</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SOS -->
+  <section id="sos" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-8 text-red-600">Emergency SOS Alert</h2>
+      <button onclick="sendSOS()" class="bg-red-600 text-white px-8 py-4 rounded-full text-xl font-bold shadow-lg hover:bg-red-700">
+        🚨 Send SOS Alert
+      </button>
+      <p class="mt-4 text-sm">Trigger for immediate blood emergency assistance.</p>
+    </div>
+  </section>
+
+  <!-- Matching -->
+  <section id="matching" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Smart Matching Algorithm</h2>
+      <form id="matching-form" class="max-w-md mx-auto bg-gray-100 p-8 rounded-lg shadow-md">
+        <label class="block mb-2">Patient Blood Type</label>
+        <select id="patient-blood" class="w-full p-2 border mb-4">
+          <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+        </select>
+        <label class="block mb-2">Urgency Level</label>
+        <select id="urgency" class="w-full p-2 border mb-4"><option>Low</option><option>Medium</option><option>High</option></select>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full">Find Matches</button>
+        <p id="matches-result" class="mt-4 text-center"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Certificate -->
+  <section id="certificate" class="py-16 bg-gray-100">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Donor Certificate Generator</h2>
+      <form id="certificate-form" class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md">
+        <label class="block mb-2">Donor Name</label>
+        <input type="text" id="cert-name" class="w-full p-2 border mb-4" required>
+        <label class="block mb-2">Date of Donation</label>
+        <input type="date" id="cert-date" class="w-full p-2 border mb-4" required>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full">Generate Certificate</button>
+      </form>
+      <div id="certificate-display" class="mt-8 text-center hidden"></div>
+    </div>
+  </section>
+
+  <!-- Organ -->
+  <section id="organ" class="py-16 bg-white">
+    <div class="container mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-8 text-red-600">Organ Donation Registration</h2>
+      <form id="organ-form" class="max-w-md mx-auto bg-gray-100 p-8 rounded-lg shadow-md">
+        <label class="block mb-2">Name</label>
+        <input type="text" id="organ-name" class="w-full p-2 border mb-4" required>
+        <label class="block mb-2">Contact</label>
+        <input type="tel" id="organ-contact" class="w-full p-2 border mb-4" required>
+        <label class="block mb-2">Preferred Organs</label>
+        <select multiple id="organ-types" class="w-full p-2 border mb-4">
+          <option>Kidney</option><option>Liver</option><option>Heart</option><option>Lungs</option>
+        </select>
+        <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full">Register</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-red-600 text-white py-8">
+    <div class="container mx-auto px-4 text-center">
+      <p>© 2025 BloodLink. All rights reserved. Save Lives, Donate Blood.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Donors simulation
+    const donors = [
+      { name: 'Alice', type: 'O+', location: 'NYC' },
+      { name: 'Bob', type: 'A+', location: 'LA' },
+      { name: 'Charlie', type: 'O-', location: 'Miami' }
+    ];
+    function renderDonors() {
+      const container = document.getElementById('real-time-donors');
+      container.innerHTML = donors.map(d =>
+        `<div class="bg-gray-100 p-4 rounded shadow">
+          <p><strong>${d.name}</strong> - ${d.type} - ${d.location}</p>
+        </div>`).join('');
+    }
+    renderDonors();
+    setInterval(renderDonors, 5000);
+
+    // Eligibility
+    document.getElementById('eligibility-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const age = +document.getElementById('age').value;
+      const weight = +document.getElementById('weight').value;
+      const result = (age >= 18 && age <= 65 && weight >= 50) ? '✅ Eligible' : '❌ Not Eligible';
+      document.getElementById('eligibility-result').textContent = result;
+    });
+
+    // Centers
+    function findCenters() {
+      const centers = [
+        { name: 'City Hospital', address: '123 Main St' },
+        { name: 'Red Cross Center', address: '456 Elm St' }
+      ];
+      document.getElementById('centers-list').innerHTML = centers.map(c =>
+        `<div class="bg-white p-4 rounded shadow">
+          <p><strong>${c.name}</strong> - ${c.address}</p>
+        </div>`).join('');
+    }
+
+    // SOS
+    function sendSOS() {
+      alert('🚨 SOS Alert Sent! Help is on the way.');
+    }
+
+    // Matching
+    document.getElementById('matching-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const blood = document.getElementById('patient-blood').value;
+      const urgency = document.getElementById('urgency').value;
+      document.getElementById('matches-result').textContent =
+        `Matches found for ${blood}, urgency: ${urgency}`;
+    });
+
+    // Certificate
+    document.getElementById('certificate-form').addEventListener('submit', e => {
+      e.preventDefault();
+      const name = document.getElementById('cert-name').value;
+      const date = document.getElementById('cert-date').value;
+      document.getElementById('certificate-display').innerHTML = `
+        <div class="bg-white p-6 rounded shadow text-center">
+          <h3 class="text-2xl font-bold text-red-600 mb-2">Blood Hero Certificate</h3>
+          <p>This certifies that <strong>${name}</strong> donated blood on <strong>${date}</strong>.</p>
+        </div>`;
+      document.getElementById('certificate-display').classList.remove('hidden');
+    });
+  </script>
+</body>
+</html>
+
